@@ -37,9 +37,10 @@ func StoreUser(w http.ResponseWriter, r *http.Request) {
 		response.JSONError(w, http.StatusInternalServerError, err, nil)
 		return
 	}
-	repository := repository.New(db)
-	saved, err := repository.PersistUser(&user)
-	defer repository.Close()
+	app := repository.New(db)
+	repository := repository.NewUserRepository(app, nil)
+	saved, err := repository.Persist(&user)
+	defer repository.GetApp().Close()
 	if err != nil {
 		response.JSONError(w, http.StatusInternalServerError, err, nil)
 		return
@@ -53,9 +54,10 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		response.JSONError(w, http.StatusInternalServerError, err, nil)
 		return
 	}
-	repository := repository.New(db)
-	users := repository.FindAllUser()
-	defer repository.Close()
+	app := repository.New(db)
+	repository := repository.NewUserRepository(app, nil)
+	users := repository.FindAll()
+	defer repository.GetApp().Close()
 	msg := "Listando todos os uarios"
 	userCollections := dto.UserCollection(users)
 	response.JSONSuccess(w, http.StatusOK, msg, userCollections)
@@ -73,9 +75,10 @@ func ShowUser(w http.ResponseWriter, r *http.Request) {
 		response.JSONError(w, http.StatusBadRequest, err, nil)
 		return
 	}
-	repository := repository.New(db)
-	user, err := repository.FindUser(int(id))
-	defer repository.Close()
+	app := repository.New(db)
+	repository := repository.NewUserRepository(app, nil)
+	user, err := repository.Find(int(id))
+	defer repository.GetApp().Close()
 	if err != nil {
 		response.JSONError(w, http.StatusNotFound, err, nil)
 		return
@@ -98,8 +101,9 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 	var user models.User
 	json.NewDecoder(r.Body).Decode(&user)
-	repository := repository.New(db)
-	defer repository.Close()
+	app := repository.New(db)
+	repository := repository.NewUserRepository(app, nil)
+	defer repository.GetApp().Close()
 
 	if authId != user.Id {
 		msg := errors.New("permission denied. You cannot update a user")
@@ -112,7 +116,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := repository.UpdateUser(&user)
+	result, err := repository.Update(&user)
 	if err != nil {
 		response.JSONError(w, http.StatusNotFound, err, nil)
 		return
@@ -133,9 +137,10 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		response.JSONError(w, http.StatusInternalServerError, err, nil)
 		return
 	}
-	repository := repository.New(db)
-	err = repository.DeleteUser(id)
-	defer repository.Close()
+	app := repository.New(db)
+	repository := repository.NewUserRepository(app, nil)
+	err = repository.Delete(id)
+	defer repository.GetApp().Close()
 	if err != nil {
 		response.JSONError(w, http.StatusInternalServerError, err, nil)
 		return
@@ -164,9 +169,12 @@ func FolloweUser(w http.ResponseWriter, r *http.Request) {
 		response.JSONError(w, http.StatusInternalServerError, err, nil)
 		return
 	}
-	repository := repository.New(db)
-	defer repository.Close()
-	if err = repository.PersistFollower(&follower); err != nil {
+	app := repository.New(db)
+	followerRepository := repository.NewFollowerRepository(app)
+	repository := repository.NewUserRepository(app, followerRepository)
+	defer repository.GetApp().Close()
+	defer followerRepository.GetApp().Close()
+	if err = repository.Follow(&follower); err != nil {
 		response.JSONError(w, http.StatusBadRequest, err, nil)
 		return
 	}
@@ -186,9 +194,12 @@ func UnFolloweUser(w http.ResponseWriter, r *http.Request) {
 		response.JSONError(w, http.StatusInternalServerError, err, nil)
 		return
 	}
-	repository := repository.New(db)
-	defer repository.Close()
-	if err = repository.UnfollowUser(followedId); err != nil {
+	app := repository.New(db)
+	followerRepository := repository.NewFollowerRepository(app)
+	repository := repository.NewUserRepository(app, followerRepository)
+	defer repository.GetApp().Close()
+	defer followerRepository.GetApp().Close()
+	if err = repository.Unfollow(followedId); err != nil {
 		response.JSONError(w, http.StatusBadRequest, err, nil)
 		return
 	}

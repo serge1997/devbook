@@ -7,8 +7,19 @@ import (
 	"errors"
 )
 
-func (app App) Login(user models.User) (*models.User, *string, error) {
-	find, err := app.FindUserByNickName(user.Nick)
+type Auth struct {
+	app App
+}
+
+func (auth Auth) GetApp() *App {
+	return &auth.app
+}
+func NewAuthRepository(app *App) *Auth {
+	return &Auth{app: *app}
+}
+
+func (auth Auth) Login(user models.User, userRepository User) (*models.User, *string, error) {
+	find, err := userRepository.FindByNickName(user.Nick)
 	if err != nil {
 		return nil, nil, errors.New("usuario  incorreto")
 	}

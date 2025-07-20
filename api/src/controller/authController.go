@@ -18,9 +18,12 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		response.JSONError(w, http.StatusInternalServerError, err, nil)
 	}
-	repository := repository.New(db)
-	defer repository.Close()
-	finded, token, err := repository.Login(user)
+	app := repository.New(db)
+	userRepository := repository.NewUserRepository(app, nil)
+	repository := repository.NewAuthRepository(app)
+	defer repository.GetApp().Close()
+	defer userRepository.GetApp().Close()
+	finded, token, err := repository.Login(user, *userRepository)
 	if err != nil {
 		response.JSONError(w, http.StatusUnauthorized, err, nil)
 		return
