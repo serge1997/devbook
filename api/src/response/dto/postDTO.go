@@ -21,6 +21,7 @@ func PostResource(post *models.Post) PostDTO {
 		Title:     post.Title,
 		Content:   post.Content,
 		CreatedAt: post.CreatedAt,
+		AuthorId:  post.AuthorId,
 	}
 	if post.Author.Id != 0 {
 		postDto.Author = &UserDTO{

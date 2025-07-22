@@ -3,6 +3,7 @@ package repository
 import (
 	"api/src/models"
 	"errors"
+	"time"
 )
 
 type Post struct {
@@ -18,7 +19,8 @@ func NewPostRepository(app *App) *Post {
 
 func (repository Post) Persist(post *models.Post) (*models.Post, error) {
 	var ErrUnknowPersitUser error = errors.New("some erro ocurred, please try leater")
-	if err := repository.app.db.Create(post).Error; err == nil {
+	post.CreatedAt = time.Now()
+	if err := repository.app.db.Create(post).Error; err != nil {
 		return nil, err
 	}
 	if post.Id == 0 {
