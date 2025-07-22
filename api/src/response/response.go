@@ -25,7 +25,12 @@ func JSONError(w http.ResponseWriter, code int, err error, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	var response Response
 	response.Code = code
-	response.Message = err.Error()
+	if err != nil {
+		response.Message = err.Error()
+	} else {
+		response.Message = "nil"
+	}
+
 	response.Data = data
 	w.WriteHeader(code)
 	json.NewEncoder(w).Encode(response)
