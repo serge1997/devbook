@@ -28,9 +28,8 @@ func JSONError(w http.ResponseWriter, code int, err error, data interface{}) {
 	if err != nil {
 		response.Message = err.Error()
 	} else {
-		response.Message = ""
+		response.Message = "No erro detail"
 	}
-
 	response.Data = data
 	w.WriteHeader(code)
 	json.NewEncoder(w).Encode(response)
