@@ -3,6 +3,8 @@ package repository
 import (
 	"api/src/models"
 	"errors"
+
+	"gorm.io/gorm"
 )
 
 type User struct {
@@ -22,6 +24,14 @@ func NewUserRepository(app *App, follower *Follower) *User {
 }
 
 func (reposiyory User) Persist(user *models.User) (*models.User, error) {
+	var ErrNickNameExists = errors.New("user name alwready exists")
+	nickname, err := reposiyory.FindByNickName(user.Nick)
+	if err != nil {
+		return nil, err
+	}
+	if nickname == nil {
+		return nil, ErrNickNameExists
+	}
 	if err := user.HashPassword(); err != nil {
 		return nil, err
 	}
@@ -75,7 +85,7 @@ func (reposiyory User) Delete(id int) error {
 
 func (reposiyory User) FindByNickName(nickname string) (*models.User, error) {
 	var user models.User
-	if err := reposiyory.app.db.Where("nick = ?", nickname).First(&user).Error; err != nil {
+	if err := reposiyory.app.db.Where("nick = ?", nickname).First(&user).Error; !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
 	return &user, nil

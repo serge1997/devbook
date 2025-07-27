@@ -1,7 +1,6 @@
 
 const createAccountBtn = document.querySelector("#register-btn")
 const LoginBtn = document.querySelector("#login-btn")
-
 if (createAccountBtn){
     
     createAccountBtn.addEventListener("click", function(e) {
@@ -11,10 +10,10 @@ if (createAccountBtn){
             password: document.getElementById("password").value,
             nick: document.getElementById("username").value
         }
-        console.log(data)
         api.post("/register", data)
         .then(response => {
-            console.log(response)
+            alert(response.message)
+            window.location.href = "/login"
         })
     })
 }

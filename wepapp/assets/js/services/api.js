@@ -20,7 +20,7 @@ class Api {
             })
             .then(async response => {
                 console.log(response.status)
-                if (response.status > 200) {
+                if (response.status >= 400) {
                     const erro = await response.json()
                     reject(erro)
                     alert(erro.message)
