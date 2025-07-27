@@ -20,6 +20,7 @@ import (
 func StoreUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		fmt.Println(err.Error())
 		response.JSONError(w, http.StatusBadRequest, err, nil)
 		return
 	}

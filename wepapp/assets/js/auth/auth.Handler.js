@@ -5,7 +5,14 @@ const LoginBtn = document.querySelector("#login-btn")
 if (createAccountBtn){
     
     createAccountBtn.addEventListener("click", function(e) {
-        api.post("/register", {name: null})
+        const data = {
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value,
+            nick: document.getElementById("username").value
+        }
+        console.log(data)
+        api.post("/register", data)
         .then(response => {
             console.log(response)
         })

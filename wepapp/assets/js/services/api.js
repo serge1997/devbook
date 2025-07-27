@@ -18,13 +18,16 @@ class Api {
                     ...headers
                 }
             })
-            .then(response => {
-                resolve(response.json())
+            .then(async response => {
+                console.log(response.status)
+                if (response.status > 200) {
+                    const erro = await response.json()
+                    reject(erro)
+                    alert(erro.message)
+                }else{
+                    resolve(response.json())
+                }
             })
-            .catch(error => {
-                reject(error)
-                console.log(error)
-            });
             
         })
     }

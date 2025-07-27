@@ -1,9 +1,11 @@
 package controller
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 
+	"github.com/serge1997/devbook-web-app/src/response"
 	"github.com/serge1997/devbook-web-app/src/utils"
 )
 
@@ -15,13 +17,20 @@ func RegisterView(w http.ResponseWriter, r *http.Request) {
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
-	request, err := http.Post("http://localhost:3000/user", "", r.Body)
+	//r.ParseForm()
+	var form interface{}
+	json.NewDecoder(r.Body).Decode(&form)
+	b, err := json.Marshal(form)
 	if err != nil {
-		w.WriteHeader(501)
-		json.NewEncoder(w).Encode(err.Error())
 		return
 	}
-	defer request.Body.Close()
-	w.WriteHeader(request.StatusCode)
-	json.NewEncoder(w).Encode(request.Body)
+
+	req, err := http.Post("http://localhost:3000/user", "application/json", bytes.NewBuffer(b))
+	if err != nil {
+		return
+	}
+	defer req.Body.Close()
+	var res response.Response
+	json.NewDecoder(req.Body).Decode(&res)
+	response.JSON(w, res)
 }
