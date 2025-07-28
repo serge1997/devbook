@@ -3,9 +3,10 @@ package controller
 import (
 	"bytes"
 	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
 
+	"github.com/serge1997/devbook-web-app/src/config"
 	"github.com/serge1997/devbook-web-app/src/response"
 	"github.com/serge1997/devbook-web-app/src/utils"
 )
@@ -22,12 +23,13 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&form)
 	b, err := json.Marshal(form)
 	if err != nil {
-		log.Fatal(err)
+		response.JSONError(w, err, http.StatusInternalServerError, nil)
 		return
 	}
-	req, err := http.Post("http://localhost:3000/user", "application/json", bytes.NewBuffer(b))
+	req, err := http.Post(fmt.Sprintf("%s/user", config.API_BASE), "application/json", bytes.NewBuffer(b))
 	if err != nil {
-		log.Fatal(err)
+		response.JSONError(w, err, http.StatusInternalServerError, nil)
+		return
 	}
 	defer req.Body.Close()
 	var res response.Response

@@ -20,3 +20,16 @@ func JSON(w http.ResponseWriter, response Response) {
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(response)
 }
+
+func JSONError(w http.ResponseWriter, err error, code int, data any) {
+	w.Header().Set("Content-Type", "application/json")
+	var response Response
+	response.Code = code
+	if err.Error() == "" {
+		response.Message = "Uknow erro, please try later."
+	}
+	response.Message = err.Error()
+	response.Data = data
+	w.WriteHeader(response.Code)
+	json.NewEncoder(w).Encode(response)
+}
