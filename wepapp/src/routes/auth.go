@@ -14,6 +14,12 @@ var authRoutes = []Route{
 		RequireAuth: false,
 	},
 	{
+		Uri:         "/login",
+		Method:      http.MethodPost,
+		Handle:      controller.Login,
+		RequireAuth: false,
+	},
+	{
 		Uri:         "/register",
 		Method:      http.MethodGet,
 		Handle:      controller.RegisterView,

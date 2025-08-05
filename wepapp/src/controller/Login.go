@@ -36,3 +36,22 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(req.Body).Decode(&res)
 	response.JSON(w, res)
 }
+
+func Login(w http.ResponseWriter, r *http.Request) {
+	var loginForm interface{}
+	json.NewDecoder(r.Body).Decode(&loginForm)
+	loginFormToByte, err := json.Marshal(loginForm)
+	if err != nil {
+		response.JSONError(w, err, http.StatusInternalServerError, nil)
+		return
+	}
+	request, err := http.Post(fmt.Sprintf("%s/auth", config.API_BASE), "application/json", bytes.NewBuffer(loginFormToByte))
+	if err != nil {
+		response.JSONError(w, err, http.StatusInternalServerError, nil)
+		return
+	}
+	defer request.Body.Close()
+	var resp response.Response
+	json.NewDecoder(request.Body).Decode(&resp)
+	response.JSON(w, resp)
+}
