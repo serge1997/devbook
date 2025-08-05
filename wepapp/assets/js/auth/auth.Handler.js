@@ -20,6 +20,13 @@ if (createAccountBtn){
 
 if (LoginBtn){
     LoginBtn.addEventListener("click", function(e) {
-        console.log("login user")
+        const data = {
+            password: document.getElementById("auth-password").value,
+            nick: document.getElementById("auth-username").value
+        }
+        api.post("/login", data)
+        .then(response => {
+            console.log(response)
+        })
     })
 }
