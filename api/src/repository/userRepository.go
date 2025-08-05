@@ -85,7 +85,7 @@ func (reposiyory User) Delete(id int) error {
 
 func (reposiyory User) FindByNickName(nickname string) (*models.User, error) {
 	var user models.User
-	if err := reposiyory.app.db.Where("nick = ?", nickname).First(&user).Error; !errors.Is(err, gorm.ErrRecordNotFound) {
+	if err := reposiyory.app.db.Where("nick = ?", nickname).First(&user).Error; errors.Is(err, gorm.ErrRecordNotFound) || err != nil {
 		return nil, err
 	}
 	return &user, nil
