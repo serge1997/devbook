@@ -53,5 +53,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	defer request.Body.Close()
 	var resp response.Response
 	json.NewDecoder(request.Body).Decode(&resp)
+	responseMapa, ok := resp.Data.(map[string]interface{})
+	if !ok {
+		response.JSONError(w, err, http.StatusInternalServerError, nil)
+		return
+	}
+	fmt.Println(responseMapa)
 	response.JSON(w, resp)
 }

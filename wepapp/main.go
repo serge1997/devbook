@@ -15,7 +15,8 @@ func init() {
 	config.Load()
 }
 func main() {
-	fmt.Println("Wep app running ")
+	fmt.Println(config.APP_PORT)
+	fmt.Println("Wep app running on port: ", config.APP_PORT)
 	r := router.Generate()
-	log.Fatal(http.ListenAndServe(":4000", r))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.APP_PORT), r))
 }
