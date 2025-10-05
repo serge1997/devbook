@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -29,10 +28,9 @@ func Load() {
 	HashKey = []byte(os.Getenv("HASH_KEY"))
 	BlockKey = []byte(os.Getenv("BLOCK_KEY"))
 
-	APP_PORT, err := strconv.Atoi(os.Getenv("APP_PORT"))
+	port, err := strconv.Atoi(os.Getenv("APP_PORT"))
+	APP_PORT = port
 	if err != nil || APP_PORT == 0 {
 		log.Fatal("APP PORT not informed")
 	}
-
-	fmt.Println(APP_PORT)
 }

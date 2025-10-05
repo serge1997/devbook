@@ -10,16 +10,18 @@ class Api {
 
         return new Promise((resolve, reject) => {
             console.log(`===== REQUEST ${method} ${url} =====`)
-            fetch(url, {
-                body: JSON.stringify(data),
+            const options = {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
                     ...headers
                 }
-            })
+            }
+            if (method != "GET") {
+                options["body"] = JSON.stringify(data)
+            }
+            fetch(url, options)
             .then(async response => {
-                console.log(response.status)
                 if (response.status >= 400) {
                     const erro = await response.json()
                     reject(erro)

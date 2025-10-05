@@ -3,6 +3,7 @@ package controller
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -26,7 +27,8 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		response.JSONError(w, err, http.StatusInternalServerError, nil)
 		return
 	}
-	req, err := http.Post(fmt.Sprintf("%s/user", config.API_BASE), "application/json", bytes.NewBuffer(b))
+	url := fmt.Sprintf("%s/user", config.API_BASE)
+	req, err := http.Post(url, "application/json", bytes.NewBuffer(b))
 	if err != nil {
 		response.JSONError(w, err, http.StatusInternalServerError, nil)
 		return
@@ -45,7 +47,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		response.JSONError(w, err, http.StatusInternalServerError, nil)
 		return
 	}
-	request, err := http.Post(fmt.Sprintf("%s/auth", config.API_BASE), "application/json", bytes.NewBuffer(loginFormToByte))
+	url := fmt.Sprintf("%s/auth", config.API_BASE)
+	request, err := http.Post(url, "application/json", bytes.NewBuffer(loginFormToByte))
 	if err != nil {
 		response.JSONError(w, err, http.StatusInternalServerError, nil)
 		return
@@ -53,11 +56,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	defer request.Body.Close()
 	var resp response.Response
 	json.NewDecoder(request.Body).Decode(&resp)
-	responseMapa, ok := resp.Data.(map[string]interface{})
-	if !ok {
-		response.JSONError(w, err, http.StatusInternalServerError, nil)
+	if resp.Code != 200 {
+		response.JSONError(w, errors.New(resp.Message), http.StatusInternalServerError, nil)
 		return
 	}
+	responseMapa, _ := resp.Data.(map[string]interface{})
 	fmt.Println(responseMapa)
 	response.JSON(w, resp)
 }

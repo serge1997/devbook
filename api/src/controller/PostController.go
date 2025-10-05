@@ -67,6 +67,22 @@ func ShowPost(w http.ResponseWriter, r *http.Request) {
 	resp := dto.PostResource(post)
 	response.JSONSuccess(w, http.StatusCreated, "showing post", resp)
 }
+func GetAllPost(w http.ResponseWriter, r *http.Request) {
+	db, err := db.DB()
+	if err != nil {
+		response.JSONError(w, http.StatusInternalServerError, err, nil)
+		return
+	}
+	app := repository.New(db)
+	repository := repository.NewPostRepository(app)
+	posts, err := repository.FindAll()
+	if err != nil {
+		response.JSONError(w, http.StatusNotFound, err, nil)
+		return
+	}
+	resp := dto.PostCollection(posts)
+	response.JSONSuccess(w, http.StatusCreated, "showing post", resp)
+}
 func UpdatePost(w http.ResponseWriter, r *http.Request) {
 
 }

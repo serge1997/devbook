@@ -26,7 +26,11 @@ if (LoginBtn){
         }
         api.post("/login", data)
         .then(response => {
-            console.log(response)
+            const { data } = response
+            if (data?.token) {
+                window.location = "/"
+                localStorage.setItem("user", JSON.stringify(data))
+            }
         })
     })
 }

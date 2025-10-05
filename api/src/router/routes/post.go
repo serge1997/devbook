@@ -13,6 +13,12 @@ var PostRoutes = []Route{
 		RequireAuth: true,
 	},
 	{
+		Uri:         "/post",
+		Method:      http.MethodGet,
+		Handle:      controller.GetAllPost,
+		RequireAuth: true,
+	},
+	{
 		Uri:         "/post/{id}",
 		Handle:      controller.ShowPost,
 		Method:      http.MethodGet,

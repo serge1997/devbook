@@ -28,6 +28,13 @@ func (repository Post) Persist(post *models.Post) (*models.Post, error) {
 	}
 	return post, nil
 }
+func (repository Post) FindAll() (*[]models.Post, error) {
+	var posts []models.Post
+	if err := repository.app.db.Find(&posts).Error; err != nil {
+		return nil, err
+	}
+	return &posts, nil
+}
 func (repository Post) FindAllByAuthor(authorId int) (*[]models.Post, error) {
 	var posts []models.Post
 	if err := repository.app.db.Where("AuthorId = ?", authorId).Find(&posts).Error; err != nil {
