@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/serge1997/devbook-web-app/src/config"
+	"github.com/serge1997/devbook-web-app/src/cookie"
 	"github.com/serge1997/devbook-web-app/src/response"
 	"github.com/serge1997/devbook-web-app/src/utils"
 )
@@ -60,7 +61,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		response.JSONError(w, errors.New(resp.Message), http.StatusInternalServerError, nil)
 		return
 	}
-	responseMapa, _ := resp.Data.(map[string]interface{})
-	fmt.Println(responseMapa)
+	responseMapa, _ := resp.Data.(map[string]any)
+	id, assertedId := responseMapa["id"].(string)
+	token, assertedToken := responseMapa["token"].(string)
+	if !assertedId || !assertedToken {
+		response.JSONError(w, errors.New("error when tried to set cookie"), http.StatusInternalServerError, nil)
+		return
+	}
+	cookie.Set(w, id, token)
 	response.JSON(w, resp)
 }
