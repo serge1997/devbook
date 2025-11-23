@@ -20,7 +20,7 @@ func Configuration(r *mux.Router) *mux.Router {
 	routes = append(routes, homeRoute)
 	routes = append(routes, postRoutes...)
 	for _, route := range routes {
-		r.HandleFunc(route.Uri, middlewares.LogRequest(route.Handle)).Methods(route.Method)
+		r.HandleFunc(route.Uri, middlewares.LogRequest(middlewares.JWTMiddleware(route.Handle))).Methods(route.Method)
 	}
 	fileServer := http.FileServer(http.Dir("./assets/"))
 	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", fileServer))

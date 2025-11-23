@@ -7,22 +7,18 @@ import (
 	"net/http"
 
 	"github.com/serge1997/devbook-web-app/src/config"
-	"github.com/serge1997/devbook-web-app/src/cookie"
 	"github.com/serge1997/devbook-web-app/src/response"
+	"github.com/serge1997/devbook-web-app/src/utils"
 )
 
 func GetAllPost(w http.ResponseWriter, r *http.Request) {
 	url := fmt.Sprintf("%s/post", config.API_BASE)
-	_, er := cookie.Get(r)
-	if er != nil {
-		response.JSONError(w, er, http.StatusInternalServerError, nil)
-		return
-	}
-	request, err := http.Get(url)
+	request, err := utils.HttpSend(r, http.MethodGet, url, nil)
 	if err != nil {
 		response.JSONError(w, err, http.StatusInternalServerError, nil)
 		return
 	}
+	fmt.Println(request.Header.Get("Authorization"))
 	var res response.Response
 	defer request.Body.Close()
 	json.NewDecoder(request.Body).Decode(&res)
