@@ -81,7 +81,7 @@ func GetAllPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	resp := dto.PostCollection(posts)
-	response.JSONSuccess(w, http.StatusCreated, "showing post", resp)
+	response.JSONSuccess(w, http.StatusOK, "showing post", resp)
 }
 func UpdatePost(w http.ResponseWriter, r *http.Request) {
 

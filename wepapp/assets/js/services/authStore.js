@@ -4,8 +4,8 @@ const authStore =  {
         return  storage != null && storage != ""
     },
     _auth: () => {
-        const user = JSON.parse(authStore._storage())
-        return user;
+      const user = authStore._storage() ? JSON.parse(authStore._storage()) : null;
+      return user;
     },
     _token: () => {
         return authStore._auth()?.token;

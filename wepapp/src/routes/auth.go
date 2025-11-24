@@ -31,4 +31,10 @@ var authRoutes = []Route{
 		Handle:      controller.Register,
 		RequireAuth: false,
 	},
+	{
+		Uri:         "/logout",
+		Method:      http.MethodPost,
+		Handle:      controller.Logout,
+		RequireAuth: true,
+	},
 }

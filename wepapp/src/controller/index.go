@@ -7,5 +7,10 @@ import (
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	utils.RenderTemplate(w, "home", nil)
+	utils.RenderTemplate(w, "home", struct {
+		Title string
+	}{
+		Title: "Data from controller",
+	},
+	)
 }

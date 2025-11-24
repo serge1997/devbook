@@ -18,7 +18,6 @@ func HttpSend(r *http.Request, method, url string, payload io.Reader) (*http.Res
 		return nil, err
 	}
 	token := fmt.Sprintf("Bearer %s", c["token"])
-	fmt.Println(token)
 	request.Header.Set("Authorization", token)
 	client := &http.Client{}
 	response, erro := client.Do(request)

@@ -71,3 +71,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	cookie.Set(w, id, token)
 	response.JSON(w, resp)
 }
+
+func Logout(w http.ResponseWriter, r *http.Request) {
+	cookie.Delete(w)
+	var res response.Response
+	res.Message = "Logout realizado"
+	res.Code = 200
+	response.JSON(w, res)
+}

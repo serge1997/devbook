@@ -1,14 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Devbook-home</title>
-    <script defer src="/assets/js/home/index.js"></script>
-    <script defer src="/assets/js/services/authStore.js"></script>
-    <script defer src="/assets/js/services/api.js"></script>
-</head>
-<body>
-    <h1>Welcome to dev book</h1>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Devbook-home</title>
+        <script defer src="/assets/js/home/index.js"></script>
+        <script defer src="/assets/js/services/authStore.js"></script>
+        <script defer src="/assets/js/services/api.js"></script>
+    </head>
+    <body>
+        <h1>Welcome to dev book</h1>
+        <h6>{{ .Title }}</h6>
+        <hr />
+        <button
+            id="logout-btn"
+            style="background-color: steelblue; color: #fff; padding: 8px"
+        >
+            Sair
+        </button>
+    </body>
 </html>

@@ -18,7 +18,6 @@ func GetAllPost(w http.ResponseWriter, r *http.Request) {
 		response.JSONError(w, err, http.StatusInternalServerError, nil)
 		return
 	}
-	fmt.Println(request.Header.Get("Authorization"))
 	var res response.Response
 	defer request.Body.Close()
 	json.NewDecoder(request.Body).Decode(&res)
